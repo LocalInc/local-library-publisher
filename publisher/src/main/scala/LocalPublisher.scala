@@ -39,6 +39,10 @@ object ActivityMessage extends Marshaller {
       pubSub.publish(topic.getName, pubSubMessage)
     }
   }
+
+  def test(): Unit = {
+
+  }
 }
 
 case class ActivityMessage(
