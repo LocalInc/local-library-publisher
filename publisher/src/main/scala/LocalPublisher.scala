@@ -10,7 +10,7 @@ import spray.json._
 
 import scala.collection.JavaConversions._
 
-object ActivityMessage extends Marshaller{
+object ActivityMessage extends Marshaller {
 
   private val KEY_VERSION = "version"
   private val KEY_LOCAL_UUID = "local-uuid"
