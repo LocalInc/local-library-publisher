@@ -1,3 +1,5 @@
+import ohnosequences.sbt.GithubRelease.keys.ghreleaseNotes
+import ohnosequences.sbt._
 import sbt.Keys._
 import sbtassembly.AssemblyPlugin.assemblySettings
 
@@ -7,7 +9,11 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
-  parallelExecution in Test := false
+  parallelExecution in Test := false,
+  ghreleaseNotes := {
+    tagName => tagName.repr + " new release"
+  },
+  ghreleaseRepoOrg := "mamdouhweb"
 )
 
 lazy val projectAssemblySettings = Seq(
@@ -20,7 +26,6 @@ lazy val projectAssemblySettings = Seq(
     case other => MergeStrategy.defaultMergeStrategy(other)
   }
 )
-
 
 lazy val commonResolvers = Seq(
   "Sonatype OSS" at "https://oss.sonatype.org/content/repositories/releases/",
