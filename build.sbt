@@ -42,6 +42,7 @@ lazy val publisher = project.in(file("publisher")).
   settings(assemblySettings: _*).
   settings(projectAssemblySettings: _*).
   settings(
+    name := "local-publisher",
     resolvers ++= Seq(
       Resolver.bintrayRepo("websudos", "oss-releases"),
       "The New Motion Public Repo" at "http://nexus.thenewmotion.com/content/groups/public/"
