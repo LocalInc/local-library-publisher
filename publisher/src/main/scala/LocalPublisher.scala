@@ -51,5 +51,5 @@ case class ActivityMessage(
 case class ActivityMessageProperties(
                                     subject: Map[String, String],
                                     directObject: Map[String, String],
-                                    indirectObject: Map[String, String]
+                                    verb: Map[String, String]
                                   )

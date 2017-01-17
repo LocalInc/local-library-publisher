@@ -5,13 +5,13 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.local.publisher.gcc",
-  version := "1.0.0",
+  version := "1.0.1",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
   parallelExecution in Test := false,
   ghreleaseNotes := {
-    tagName => tagName.repr + " new release"
+    tagName => tagName.repr + " corrected activity message properties as it should have verb not indirect object"
   },
   ghreleaseRepoOrg := "mamdouhweb"
 )
