@@ -11,7 +11,7 @@ lazy val commonSettings = Seq(
   parallelExecution in ThisBuild := false,
   parallelExecution in Test := false,
   ghreleaseNotes := {
-    tagName => tagName.repr + " corrected activity message properties as it should have verb not indirect object"
+    tagName => tagName.repr + " Changed publisher to QuBit"
   },
   ghreleaseRepoOrg := "mamdouhweb"
 )
@@ -19,11 +19,8 @@ lazy val commonSettings = Seq(
 lazy val projectAssemblySettings = Seq(
   assemblyJarName in assembly := name.value + ".jar",
   assemblyMergeStrategy in assembly := {
-    case "BUILD" => MergeStrategy.discard
-    case PathList("org", "apache", "commons", "logging", xs@_*) => MergeStrategy.first
-    case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
-    case PathList("META-INF", "sun-jaxb.episode") => MergeStrategy.first
-    case other => MergeStrategy.defaultMergeStrategy(other)
+    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+    case x => MergeStrategy.first
   }
 )
 
@@ -50,6 +47,8 @@ lazy val versions = new {
   val slf4jLog4j = "1.7.22"
   val logbackClassic = "1.1.9"
   val akkaHttpXml = "10.0.0"
+
+  val jodaTime = "2.9.7"
 }
 
 lazy val publisher = project.in(file("publisher")).
@@ -74,6 +73,7 @@ lazy val publisher = project.in(file("publisher")).
       "org.slf4j" % "slf4j-api" % versions.slf4jAPI,
       "org.slf4j" % "log4j-over-slf4j" % versions.slf4jLog4j,
       "ch.qos.logback" % "logback-classic" % versions.logbackClassic,
-      "com.google.cloud" % "google-cloud-pubsub" % versions.gcPubSub
+      "joda-time" % "joda-time" % versions.jodaTime
+
     )
   )

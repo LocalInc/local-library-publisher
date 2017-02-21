@@ -4,21 +4,19 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 import akka.NotUsed
+import akka.actor.ActorRef
 import marshalling.Marshaller
 import com.qubit.pubsub.akka.attributes._
 import com.typesafe.scalalogging.LazyLogging
 import akka.stream._
-import akka.stream.scaladsl.{Sink, Source, SourceQueueWithComplete}
+import akka.stream.scaladsl.{Flow, Sink, Source}
 import com.qubit.pubsub.akka.PubSubSink
 import com.qubit.pubsub.client.{PubSubMessage, PubSubTopic}
 import com.qubit.pubsub.client.grpc.PubSubGrpcClient
 import com.qubit.pubsub.client.retry.RetryingPubSubClient
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 import spray.json._
-
-import scala.collection.JavaConversions._
 
 object ActivityMessage extends Marshaller with LazyLogging {
 
@@ -39,13 +37,12 @@ object ActivityMessage extends Marshaller with LazyLogging {
 
   val sink: Sink[PubSubMessage, NotUsed] = Sink.fromGraph(pubSubSink).withAttributes(attributes)
 
-  val overflowStrategy: OverflowStrategy = akka.stream.OverflowStrategy.dropHead
+  val overflowStrategy: OverflowStrategy = akka.stream.OverflowStrategy.fail
   val bufferSize: Int = sys.env.getOrElse("ENV_QUEUE_BUFFER_SIZE", "").toInt
 
-  val source: SourceQueueWithComplete[PubSubMessage] = Source.queue(bufferSize, overflowStrategy)
-    .to(sink)
-    .run()
+  val source: Source[PubSubMessage, ActorRef] = Source.actorRef[PubSubMessage](bufferSize, overflowStrategy)
 
+  val publisher: ActorRef = Flow[PubSubMessage].to(sink).runWith(source)
 
   private val messageAttributes: (String, String) => Map[String, String] = (version: String, uuid: String) => {
     Map(KEY_VERSION -> version, KEY_LOCAL_UUID -> uuid)
@@ -59,10 +56,10 @@ object ActivityMessage extends Marshaller with LazyLogging {
     PubSubTopic(sys.env.getOrElse("ENV_PROJECT", ""), sys.env.getOrElse("ENV_QUEUE_TOPIC", ""))
   }
 
-  def publish(message: ActivityMessage, topic: PubSubTopic, version: String = "1.0.0", uuid: String = UUID.randomUUID().toString): Future[QueueOfferResult] = {
+  def publish(message: ActivityMessage, topic: PubSubTopic, version: String = "1.0.0", uuid: String = UUID.randomUUID().toString): Unit = {
     val messageJsonString = message.toJson.prettyPrint
     val pubSubMessage = PubSubMessage(messageJsonString.getBytes, Some(uuid), Some(ZonedDateTime.now()), Some(messageAttributes.apply(version, uuid)))
-    source.offer(pubSubMessage)
+    publisher ! pubSubMessage
   }
 }
 
