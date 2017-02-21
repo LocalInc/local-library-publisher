@@ -5,7 +5,7 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.local.publisher.gcc",
-  version := "1.0.1",
+  version := "1.1.0",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
@@ -38,8 +38,18 @@ lazy val versions = new {
   val gcs = "0.8.0-beta"
   val gcPubSub = "0.8.0"
 
+  val akkaHttpCore = "10.0.0"
+  val akkaHttpTestKit = "10.0.0"
   val akkaHttpSprayJson = "10.0.0"
   val akkaHttpJackson = "10.0.0"
+
+  val cloudPubSub = "1.0.0"
+
+  val slf4jScalaLogging = "2.1.2"
+  val slf4jAPI = "1.7.22"
+  val slf4jLog4j = "1.7.22"
+  val logbackClassic = "1.1.9"
+  val akkaHttpXml = "10.0.0"
 }
 
 lazy val publisher = project.in(file("publisher")).
@@ -54,8 +64,16 @@ lazy val publisher = project.in(file("publisher")).
     ) ++ commonResolvers,
 
     libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-http-core" % versions.akkaHttpCore,
+      "com.typesafe.akka" %% "akka-http-testkit" % versions.akkaHttpTestKit,
       "com.typesafe.akka" %% "akka-http-spray-json" % versions.akkaHttpSprayJson,
       "com.typesafe.akka" %% "akka-http-jackson" % versions.akkaHttpJackson,
+      "com.typesafe.akka" %% "akka-http-xml" % versions.akkaHttpXml,
+      "com.qubit" % "akka-cloudpubsub_2.11" % versions.cloudPubSub,
+      "com.typesafe.scala-logging" %% "scala-logging-slf4j" % versions.slf4jScalaLogging,
+      "org.slf4j" % "slf4j-api" % versions.slf4jAPI,
+      "org.slf4j" % "log4j-over-slf4j" % versions.slf4jLog4j,
+      "ch.qos.logback" % "logback-classic" % versions.logbackClassic,
       "com.google.cloud" % "google-cloud-pubsub" % versions.gcPubSub
     )
   )
