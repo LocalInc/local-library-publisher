@@ -5,7 +5,7 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.local.publisher.gcc",
-  version := "1.1.4",
+  version := "1.2.0",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
@@ -43,7 +43,7 @@ lazy val versions = new {
   val akkaHttpSprayJson = "10.0.0"
   val akkaHttpJackson = "10.0.0"
 
-  val cloudPubSub = "1.0.0"
+  val cloudPubSub = "1.17"
 
   val slf4jScalaLogging = "2.1.2"
   val slf4jAPI = "1.7.22"
@@ -74,7 +74,7 @@ lazy val publisher = project.in(file("publisher")).
       "com.typesafe.akka" %% "akka-http-spray-json" % versions.akkaHttpSprayJson,
       "com.typesafe.akka" %% "akka-http-jackson" % versions.akkaHttpJackson,
       "com.typesafe.akka" %% "akka-http-xml" % versions.akkaHttpXml,
-      ("com.qubit" % "akka-cloudpubsub_2.11" % versions.cloudPubSub).excludeAll(exclusionRuleProtobuf, exclusionRuleGuava),
+      "com.spotify" % "async-google-pubsub-client" % versions.cloudPubSub,
       "org.slf4j" % "slf4j-api" % versions.slf4jAPI,
       "org.slf4j" % "log4j-over-slf4j" % versions.slf4jLog4j,
       "ch.qos.logback" % "logback-classic" % versions.logbackClassic,
