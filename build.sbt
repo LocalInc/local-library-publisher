@@ -5,15 +5,15 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.local.publisher.gcc",
-  version := "1.0.1",
+  version := "1.1.1",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
   parallelExecution in Test := false,
   ghreleaseNotes := {
-    tagName => tagName.repr + " corrected activity message properties as it should have verb not indirect object"
+    tagName => tagName.repr + " Changed publisher to QuBit"
   },
-  ghreleaseRepoOrg := "mamdouhweb"
+  ghreleaseRepoOrg := "LocalInc"
 )
 
 lazy val projectAssemblySettings = Seq(
@@ -38,9 +38,24 @@ lazy val versions = new {
   val gcs = "0.8.0-beta"
   val gcPubSub = "0.8.0"
 
+  val akkaHttpCore = "10.0.0"
+  val akkaHttpTestKit = "10.0.0"
   val akkaHttpSprayJson = "10.0.0"
   val akkaHttpJackson = "10.0.0"
+
+  val cloudPubSub = "1.0.0"
+
+  val slf4jScalaLogging = "2.1.2"
+  val slf4jAPI = "1.7.22"
+  val slf4jLog4j = "1.7.22"
+  val logbackClassic = "1.1.9"
+  val akkaHttpXml = "10.0.0"
+
+  val jodaTime = "2.9.7"
 }
+
+val exclusionRuleGuava = ExclusionRule("com.google.guava", "guava-jdk5")
+val exclusionRuleProtobuf = ExclusionRule("com.google.protobuf", "protobuf-lite")
 
 lazy val publisher = project.in(file("publisher")).
   settings(commonSettings: _*).
@@ -54,8 +69,16 @@ lazy val publisher = project.in(file("publisher")).
     ) ++ commonResolvers,
 
     libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-http-core" % versions.akkaHttpCore,
+      "com.typesafe.akka" %% "akka-http-testkit" % versions.akkaHttpTestKit,
       "com.typesafe.akka" %% "akka-http-spray-json" % versions.akkaHttpSprayJson,
       "com.typesafe.akka" %% "akka-http-jackson" % versions.akkaHttpJackson,
-      "com.google.cloud" % "google-cloud-pubsub" % versions.gcPubSub
+      "com.typesafe.akka" %% "akka-http-xml" % versions.akkaHttpXml,
+      ("com.qubit" % "akka-cloudpubsub_2.11" % versions.cloudPubSub).excludeAll(exclusionRuleProtobuf, exclusionRuleGuava),
+      "org.slf4j" % "slf4j-api" % versions.slf4jAPI,
+      "org.slf4j" % "log4j-over-slf4j" % versions.slf4jLog4j,
+      "ch.qos.logback" % "logback-classic" % versions.logbackClassic,
+      "joda-time" % "joda-time" % versions.jodaTime
+
     )
   )

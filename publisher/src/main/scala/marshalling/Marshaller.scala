@@ -1,4 +1,4 @@
-package marshalling
+package com.local.publisher.gc.marshalling
 
 import java.net.URL
 import java.text.{ParseException, SimpleDateFormat}
