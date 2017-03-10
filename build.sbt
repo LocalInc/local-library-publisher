@@ -5,7 +5,7 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.local.publisher.gcc",
-  version := "1.1.0",
+  version := "1.1.1",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
@@ -13,14 +13,17 @@ lazy val commonSettings = Seq(
   ghreleaseNotes := {
     tagName => tagName.repr + " Changed publisher to QuBit"
   },
-  ghreleaseRepoOrg := "mamdouhweb"
+  ghreleaseRepoOrg := "LocalInc"
 )
 
 lazy val projectAssemblySettings = Seq(
   assemblyJarName in assembly := name.value + ".jar",
   assemblyMergeStrategy in assembly := {
-    case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-    case x => MergeStrategy.first
+    case "BUILD" => MergeStrategy.discard
+    case PathList("org", "apache", "commons", "logging", xs@_*) => MergeStrategy.first
+    case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.first
+    case PathList("META-INF", "sun-jaxb.episode") => MergeStrategy.first
+    case other => MergeStrategy.defaultMergeStrategy(other)
   }
 )
 
@@ -51,6 +54,9 @@ lazy val versions = new {
   val jodaTime = "2.9.7"
 }
 
+val exclusionRuleGuava = ExclusionRule("com.google.guava", "guava-jdk5")
+val exclusionRuleProtobuf = ExclusionRule("com.google.protobuf", "protobuf-lite")
+
 lazy val publisher = project.in(file("publisher")).
   settings(commonSettings: _*).
   settings(assemblySettings: _*).
@@ -68,8 +74,7 @@ lazy val publisher = project.in(file("publisher")).
       "com.typesafe.akka" %% "akka-http-spray-json" % versions.akkaHttpSprayJson,
       "com.typesafe.akka" %% "akka-http-jackson" % versions.akkaHttpJackson,
       "com.typesafe.akka" %% "akka-http-xml" % versions.akkaHttpXml,
-      "com.qubit" % "akka-cloudpubsub_2.11" % versions.cloudPubSub,
-      "com.typesafe.scala-logging" %% "scala-logging-slf4j" % versions.slf4jScalaLogging,
+      ("com.qubit" % "akka-cloudpubsub_2.11" % versions.cloudPubSub).excludeAll(exclusionRuleProtobuf, exclusionRuleGuava),
       "org.slf4j" % "slf4j-api" % versions.slf4jAPI,
       "org.slf4j" % "log4j-over-slf4j" % versions.slf4jLog4j,
       "ch.qos.logback" % "logback-classic" % versions.logbackClassic,
