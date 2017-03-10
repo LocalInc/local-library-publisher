@@ -7,6 +7,7 @@ import com.spotify.google.cloud.pubsub.client.{Message, Publisher, Pubsub}
 
 import scala.collection.JavaConversions._
 import spray.json._
+import com.spotify.google.cloud.pubsub.client.Message.encode
 
 object ActivityMessage extends Marshaller {
 
@@ -21,7 +22,7 @@ object ActivityMessage extends Marshaller {
 
   val publisher: Publisher = Publisher.builder()
     .pubsub(pubsub)
-    .project("my-google-cloud-project")
+    .project(sys.env.getOrElse("ENV_PROJECT", ""))
     .concurrency(128)
     .build()
 
@@ -38,9 +39,9 @@ object ActivityMessage extends Marshaller {
   }
 
   def publish(message: ActivityMessage, topic: String, version: String = "1.0.0", uuid: String = UUID.randomUUID().toString): String = {
-    val messageJsonString = message.toJson.toString
+    val messageJsonString = message.toJson.toString.getBytes
     val messageToPublish = Message.builder().attributes(messageAttributes(version, uuid))
-      .data(messageJsonString)
+      .data(encode(messageJsonString))
       .build()
     publisher.publish(topic, messageToPublish).get()
   }
@@ -54,7 +55,7 @@ case class ActivityMessage(
                             properties: ActivityMessageProperties
                           )
 case class ActivityMessageProperties(
-                                    subject: Map[String, String],
-                                    directObject: Map[String, String],
-                                    verb: Map[String, String]
-                                  )
+                                      subject: Map[String, String],
+                                      directObject: Map[String, String],
+                                      verb: Map[String, String]
+                                    )

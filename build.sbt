@@ -5,7 +5,7 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.local.publisher.gcc",
-  version := "1.2.0",
+  version := "1.2.1",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
@@ -53,9 +53,6 @@ lazy val versions = new {
 
   val jodaTime = "2.9.7"
 }
-
-val exclusionRuleGuava = ExclusionRule("com.google.guava", "guava-jdk5")
-val exclusionRuleProtobuf = ExclusionRule("com.google.protobuf", "protobuf-lite")
 
 lazy val publisher = project.in(file("publisher")).
   settings(commonSettings: _*).
