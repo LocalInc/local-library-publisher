@@ -1,4 +1,4 @@
-package com.local.publisher.gc
+package com.spotsinc.publisher.gc
 
 import java.util.UUID
 

@@ -1,4 +1,4 @@
-package com.local.publisher.gc.marshalling
+package com.spotsinc.publisher.gc.marshalling
 
 import java.net.URL
 import java.text.{ParseException, SimpleDateFormat}
@@ -19,7 +19,7 @@ trait Marshaller extends Directives with SprayJsonSupport with DefaultJsonProtoc
     def read(value: JsValue) = {
       value match {
         case JsString(uuid) => UUID.fromString(uuid)
-        case _              => throw new DeserializationException("Expected hexadecimal UUID string")
+        case _              => throw DeserializationException("Expected hexadecimal UUID string")
       }
     }
   }
@@ -29,13 +29,13 @@ trait Marshaller extends Directives with SprayJsonSupport with DefaultJsonProtoc
     def read(value: JsValue) = {
       value match {
         case JsString(url) => new URL(url)
-        case _              => throw new DeserializationException("Expected hexadecimal UUID string")
+        case _              => throw DeserializationException("Expected hexadecimal UUID string")
       }
     }
   }
 
   implicit object DateTimeFormat extends JsonFormat[DateTime] {
-    override def write(obj: DateTime) : JsValue = JsString(obj.toString("yyyy-MM-dd"))
+    override def write(obj: DateTime) : JsValue = JsString(obj.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ"))
 
     override def read(json: JsValue) : DateTime = json match {
       case JsString(rawDate) => {

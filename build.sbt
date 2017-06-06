@@ -4,7 +4,7 @@ import sbt.Keys._
 import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
-  organization := "com.local.publisher.gcc",
+  organization := "com.spotsinc.publisher.gcc",
   version := "1.2.1",
   scalaVersion := "2.11.8",
   fork in run := true,
@@ -13,7 +13,7 @@ lazy val commonSettings = Seq(
   ghreleaseNotes := {
     tagName => tagName.repr + " Changed publisher to QuBit"
   },
-  ghreleaseRepoOrg := "LocalInc"
+  ghreleaseRepoOrg := "SpotsInc"
 )
 
 lazy val projectAssemblySettings = Seq(
@@ -59,7 +59,7 @@ lazy val publisher = project.in(file("publisher")).
   settings(assemblySettings: _*).
   settings(projectAssemblySettings: _*).
   settings(
-    name := "local-library-publisher",
+    name := "spots-library-publisher",
     resolvers ++= Seq(
       Resolver.bintrayRepo("websudos", "oss-releases"),
       "The New Motion Public Repo" at "http://nexus.thenewmotion.com/content/groups/public/"
