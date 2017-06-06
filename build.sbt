@@ -11,7 +11,7 @@ lazy val commonSettings = Seq(
   parallelExecution in ThisBuild := false,
   parallelExecution in Test := false,
   ghreleaseNotes := {
-    tagName => tagName.repr + " Changed publisher to QuBit"
+    tagName => tagName.repr + " Changed publisher marshaller for joda time, and naming to spots"
   },
   ghreleaseRepoOrg := "SpotsInc"
 )
