@@ -5,7 +5,7 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.spotsinc.publisher.gcc",
-  version := "1.2.3",
+  version := "1.2.4",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
