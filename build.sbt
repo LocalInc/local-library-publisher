@@ -5,7 +5,7 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.spotsinc.publisher.gcc",
-  version := "1.2.4",
+  version := "1.2.5",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
@@ -43,7 +43,7 @@ lazy val versions = new {
   val akkaHttpSprayJson = "10.0.0"
   val akkaHttpJackson = "10.0.0"
 
-  val cloudPubSub = "1.17"
+  val cloudPubSub = "1.29"
 
   val slf4jScalaLogging = "2.1.2"
   val slf4jAPI = "1.7.22"
