@@ -5,7 +5,7 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.spotsinc.publisher.gcc",
-  version := "1.2.5",
+  version := "1.3.0",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
@@ -52,6 +52,8 @@ lazy val versions = new {
   val akkaHttpXml = "10.0.0"
 
   val jodaTime = "2.9.7"
+
+  val avro4s = "1.8.0"
 }
 
 lazy val publisher = project.in(file("publisher")).
@@ -75,7 +77,7 @@ lazy val publisher = project.in(file("publisher")).
       "org.slf4j" % "slf4j-api" % versions.slf4jAPI,
       "org.slf4j" % "log4j-over-slf4j" % versions.slf4jLog4j,
       "ch.qos.logback" % "logback-classic" % versions.logbackClassic,
-      "joda-time" % "joda-time" % versions.jodaTime
-
+      "joda-time" % "joda-time" % versions.jodaTime,
+      "com.sksamuel.avro4s" %% "avro4s-core" % versions.avro4s
     )
   )

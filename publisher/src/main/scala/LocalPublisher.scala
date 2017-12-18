@@ -12,7 +12,7 @@ import com.spotify.google.cloud.pubsub.client.Message.encode
 object ActivityMessage extends Marshaller {
 
   private val KEY_VERSION = "version"
-  private val KEY_SPOTS_UUID = "spots-uuid"
+  private val KEY_UUID = "uuid"
 
   implicit val activityMessagePropertiesJsonFormat: RootJsonFormat[ActivityMessageProperties] = jsonFormat3(ActivityMessageProperties)
   implicit val activityMessageJsonFormat: RootJsonFormat[ActivityMessage] = jsonFormat5(ActivityMessage.apply)
@@ -22,12 +22,12 @@ object ActivityMessage extends Marshaller {
 
   val publisher: Publisher = Publisher.builder()
     .pubsub(pubsub)
-    .project(sys.env.getOrElse("ENV_PROJECT", ""))
+    .project(sys.env.getOrElse("ENV_GCC_PROJECT", ""))
     .concurrency(128)
     .build()
 
   private val messageAttributes: (String, String) => Map[String, String] = (version: String, uuid: String) => {
-    Map(KEY_VERSION -> version, KEY_SPOTS_UUID -> uuid)
+    Map(KEY_VERSION -> version, KEY_UUID -> uuid)
   }
 
   def apply(message: Message): (ActivityMessage, Map[String, String]) = {
