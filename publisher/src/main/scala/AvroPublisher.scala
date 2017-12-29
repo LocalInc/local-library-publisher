@@ -1,11 +1,11 @@
 package com.spotsinc.publisher.avro
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.io.{ByteArrayOutputStream, File, FileOutputStream}
 import java.util.UUID
 
 import com.sksamuel.avro4s._
-import com.spotify.google.cloud.pubsub.client.{Message, Publisher, Pubsub}
 import com.spotify.google.cloud.pubsub.client.Message.encode
+import com.spotify.google.cloud.pubsub.client.{Message, Publisher, Pubsub}
 import org.apache.avro.Schema
 
 import scala.collection.JavaConversions._
@@ -35,16 +35,17 @@ class AvroPublisher[T] {
 
   def serializeBinaryAvroMessage(message: Seq[T])(implicit schema: SchemaFor[T], toRecord: ToRecord[T]): Array[Byte] = {
     val binarySerializer = new ByteArrayOutputStream()
-    val output = AvroOutputStream.binary[T](binarySerializer)
+    val output = AvroOutputStream.data[T](binarySerializer)
     output.write(message)
     output.close()
     binarySerializer.toByteArray
   }
 
   def deserializeBinaryAvroMessage(message: Array[Byte])(implicit schema: SchemaFor[T], fromRecord: FromRecord[T]): Seq[T] = {
-    val in = new ByteArrayInputStream(message)
-    val input = AvroInputStream.binary[T](in)
-    input.iterator.toSeq
+    val input = AvroInputStream.data[T](message)
+    val results = input.iterator.toSeq
+    input.close()
+    results
   }
 
 

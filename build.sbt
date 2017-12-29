@@ -5,13 +5,13 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.spotsinc.publisher.gcc",
-  version := "1.3.1",
+  version := "1.3.2",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
   parallelExecution in Test := false,
   ghreleaseNotes := {
-    tagName => tagName.repr + " Changed publisher marshaller for joda time, and naming to spots"
+    tagName => tagName.repr + " Changed avro to publish data schema with output"
   },
   ghreleaseRepoOrg := "SpotsInc"
 )
