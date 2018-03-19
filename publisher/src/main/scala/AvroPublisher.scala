@@ -49,8 +49,10 @@ class AvroPublisher[T] {
   }
 
 
-  def publishBinary(message: Array[Byte], topic: String, version: String = "1.0.0", uuid: String = UUID.randomUUID().toString): String = {
-    val messageToPublish = Message.builder().attributes(messageAttributes(version, uuid))
+  def publishBinary(message: Array[Byte], topic: String, version: String = "1.0.0", uuid: String = UUID.randomUUID().toString,
+                    additionalAttributes: Map[String, String] = Map()): String = {
+    val attributes = messageAttributes(version, uuid) ++ additionalAttributes
+    val messageToPublish = Message.builder().attributes(attributes)
       .data(encode(message))
       .build()
     publisher.publish(topic, messageToPublish).get()

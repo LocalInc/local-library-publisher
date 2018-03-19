@@ -5,13 +5,13 @@ import sbtassembly.AssemblyPlugin.assemblySettings
 
 lazy val commonSettings = Seq(
   organization := "com.spotsinc.publisher.gcc",
-  version := "1.3.2",
+  version := "1.3.3",
   scalaVersion := "2.11.8",
   fork in run := true,
   parallelExecution in ThisBuild := false,
   parallelExecution in Test := false,
   ghreleaseNotes := {
-    tagName => tagName.repr + " Changed avro to publish data schema with output"
+    tagName => tagName.repr + " Added ability to post additional attributes with avro messages"
   },
   ghreleaseRepoOrg := "SpotsInc"
 )
